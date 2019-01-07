@@ -1,0 +1,12 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:latest",
+        "tslint-config-prettier",
+        "tslint-config-airbnb"
+    ],
+    "rules": {
+        "no-console": false,
+        "no-boolean-literal-compare": false
+    }
+}

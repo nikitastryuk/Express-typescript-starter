@@ -1,0 +1,70 @@
+1. Nodemon, typescript ts-node (allow to run Typescript without the need to compile then run)
+npm i ts-node nodemon typescript -D
+
+2. Scripts 
+"scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec ts-node src/index.ts --watch src",
+    "build": "rimraf dist && tsc"
+}
+start: will run the compiled js, for production use mostly.
+dev: will run ts-node and watch for changes.
+build: compile TS code into JS and place it in the dist folder.
+
+3. tsconfig and tslint 
+npm i tslint-config-prettier tslint-config-airbnb tslint -D
+
+tsconfig.json
+{
+  "compilerOptions": {
+    // Basic Options
+    "module": "commonjs",
+    "target": "ES2018",
+    // Strict Type-Checking Options
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    // Additional Checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // Module Resolution Options
+    "moduleResolution": "node",
+    "rootDir": "src/",
+    "outDir": "bin/",
+    "esModuleInterop": true,
+    "removeComments": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/node_modules"
+  ]
+}
+
+tslint.json
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:latest",
+        "tslint-config-prettier",
+        "tslint-config-airbnb"
+    ],
+    "rules": {
+        "no-console": false
+    }
+}
+
+4. VsCode settings 
+{
+  "editor.formatOnSave": true,
+  "tslint.autoFixOnSave": true
+}
+
+5. Lint-staged, husky
+
+6. Express and Node 
+npm i express -S 
+npm i @types/express @types/node -D

@@ -1,0 +1,10 @@
+"lint-staged": {
+  "*.{json,txt}": [
+      "prettier --write", 
+      "git add"
+  ],
+  "src/**/*.ts": [
+    "prettier --write",
+    "git add"
+  ]
+}

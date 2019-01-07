@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    // Basic Options
+    "module": "commonjs",
+    "target": "ES2018",
+    // Strict Type-Checking Options
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    // Additional Checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // Module Resolution Options
+    "moduleResolution": "node",
+    "rootDir": "src/",
+    "outDir": "bin/",
+    "esModuleInterop": true,
+    "removeComments": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/node_modules"
+  ]
+}
