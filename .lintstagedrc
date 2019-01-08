@@ -1,5 +1,5 @@
 "lint-staged": {
-  "*.{json,txt}": [
+  "*": [
       "prettier --write", 
       "git add"
   ],
