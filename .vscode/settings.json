@@ -1,4 +1,7 @@
 {
-  // "editor.formatOnSave": true,
-  // "tslint.autoFixOnSave": true
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.formatOnSave": false
+  },
+  "tslint.autoFixOnSave": true
 }

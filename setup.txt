@@ -12,7 +12,10 @@ dev: will run ts-node and watch for changes.
 build: compile TS code into JS and place it in the dist folder.
 
 3. tsconfig and tslint 
-npm i tslint-config-prettier tslint-config-airbnb tslint -D
+npm i tslint-config-prettier tslint-plugin-prettier tslint-config-airbnb tslint -D
+
+plugin-prettier uses prettier under the hood and raise errors when code differs from expected output
+config-prettier turns off formating rules that might have a conflict with eslint one
 
 tsconfig.json
 {
@@ -20,10 +23,14 @@ tsconfig.json
     // Basic Options
     "module": "commonjs",
     "target": "ES2018",
+    "removeComments": true,
     // Strict Type-Checking Options
-    "strict": true,
+    "alwaysStrict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true, 
     // Additional Checks
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -34,7 +41,6 @@ tsconfig.json
     "rootDir": "src/",
     "outDir": "bin/",
     "esModuleInterop": true,
-    "removeComments": true
   },
   "include": [
     "src/**/*"
@@ -46,24 +52,65 @@ tsconfig.json
 
 tslint.json
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:latest",
-        "tslint-config-prettier",
-        "tslint-config-airbnb"
-    ],
-    "rules": {
-        "no-console": false
-    }
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier",
+    "tslint-config-airbnb"
+  ],
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "no-console": false,
+    "prettier": [
+      true,
+      {
+        "singleQuote": true,
+        "arrowParens": "avoid",
+        "bracketSpacing": true,
+        "jsxBracketSameLine": true,
+        "printWidth": 120,
+        "proseWrap": "always",
+        "semi": true,
+        "tabWidth": 2,
+        "trailingComma": "all",
+        "space-before-function-paren": "never",
+        "useTabs": false
+      }
+    ]
+  }
 }
 
 4. VsCode settings 
 {
   "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.formatOnSave": false
+  },
   "tslint.autoFixOnSave": true
 }
 
 5. Lint-staged, husky
+npm i husky lint-staged typescript -D
+.lintstagedrc
+{
+  "*.json": [
+      "prettier --write", 
+      "git add"
+  ],
+  "*.ts": [
+    "tslint --fix",
+    "git add"
+  ]
+}
+
+.huskyrc
+{
+  "hooks": {
+    "pre-commit": "lint-staged"
+  }
+}
 
 6. Express and Node 
 npm i express -S 

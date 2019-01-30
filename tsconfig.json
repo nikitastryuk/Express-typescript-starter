@@ -2,27 +2,25 @@
   "compilerOptions": {
     // Basic Options
     "module": "commonjs",
-    "target": "ES2018",
+    "target": "esnext",
+    "removeComments": true,
     // Strict Type-Checking Options
-    "strict": true,
+    "alwaysStrict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
     // Additional Checks
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     // Module Resolution Options
+    "resolveJsonModule": true,
     "moduleResolution": "node",
-    "rootDir": "src/",
     "outDir": "bin/",
-    "esModuleInterop": true,
-    "removeComments": true
+    "esModuleInterop": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["src/node_modules"]
 }

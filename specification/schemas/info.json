@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "The internal code used to identify errors"
+    },
+    "data": {
+      "type": [
+        "object",
+        "string",
+        "array",
+        "boolean",
+        "integer",
+        "number",
+        "null"
+      ],
+      "description": "Extra information that may provide context surrounding the error"
+    },
+    "httpCode": {
+      "type": "string",
+      "description": "The http status code of this err"
+    },
+    "message": {
+      "type": "string",
+      "description": "A description of the error that has occurred"
+    }
+  }
+}

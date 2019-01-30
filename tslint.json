@@ -5,8 +5,29 @@
     "tslint-config-prettier",
     "tslint-config-airbnb"
   ],
+  "rulesDirectory": ["tslint-plugin-prettier"],
   "rules": {
     "no-console": false,
-    "no-boolean-literal-compare": false
+    "space-before-function-paren": false,
+    "max-classes-per-file": false,
+    "max-line-length": [true, 120],
+    "no-unused-variable": [
+      true,
+      {
+        "ignore-pattern": "^_"
+      }
+    ],
+    "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"],
+    "ter-arrow-parens": false,
+    "prettier": [
+      true,
+      {
+        "singleQuote": true,
+        "printWidth": 120,
+        "semi": true,
+        "tabWidth": 2,
+        "trailingComma": "all"
+      }
+    ]
   }
 }
