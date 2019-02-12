@@ -1,0 +1,12 @@
+{
+  "get": {
+    "tags": ["Health"],
+    "summary": "Gets Server Information - use this as a healthcheck",
+    "description": "Provides information on current server version",
+    "responses": {
+      "200": {
+        "description": "Api is healthy"
+      }
+    }
+  }
+}

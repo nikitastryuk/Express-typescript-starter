@@ -7,9 +7,10 @@ import http from 'http';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 
-import { DocumentationRouter } from './components/documentation/documentation.route';
-import { InfoRouter } from './components/info/info.route';
-import { ApiError, ErrorResponse } from './util/error';
+import { DocumentationRouter } from '../components/documentation/documentation.route';
+import { InfoRouter } from '../components/info/info.route';
+import { UserRouter } from '../components/user/user.route';
+import { ApiError, ErrorResponse } from '../helpers/error';
 
 export class ExpressServer {
   private _application: express.Application;
@@ -40,6 +41,7 @@ export class ExpressServer {
   }
 
   private init() {
+    this._application.use(express.static('specification/swagger-ui'));
     // Middlewares
     this.initDefaultMiddlewares();
     // Routes
@@ -60,13 +62,16 @@ export class ExpressServer {
     // Compress response
     this._application.use(compression());
     // Logger
-    this._application.use(morgan('dev'));
+    if (process.env.NODE_ENV === 'dev') {
+      this._application.use(morgan('dev'));
+    }
   }
 
   private initRoutes() {
     this._application.use(InfoRouter());
     // Swagger
     this._application.use(DocumentationRouter());
+    this._application.use(UserRouter());
     // 404
     this._application.use((_req: express.Request, _res: express.Response, next: express.NextFunction) => {
       next(new ApiError(ErrorResponse.WrongEndpoint));

@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 dotenv.config();
+import mongoose from 'mongoose';
 
-import { initDatabase } from './database';
-import { ExpressServer } from './server';
+import { initDatabase } from './config/database';
+import { ExpressServer } from './config/server';
 (async () => {
   try {
     // Check environment variables
@@ -21,7 +21,6 @@ import { ExpressServer } from './server';
     // Start server
     const server = new ExpressServer();
     await server.start();
-    // await server.stop();
   } catch (error) {
     console.log(error);
   }

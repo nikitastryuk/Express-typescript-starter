@@ -1,6 +1,6 @@
 {
   "*.json": [
-      "prettier --write", 
+      "prettier --write",
       "git add"
   ],
   "*.ts": [

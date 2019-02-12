@@ -5,7 +5,10 @@
   "scripts": {
     "start": "node bin/src/index.js",
     "dev": "nodemon --exec ts-node src/index.ts --watch src",
-    "build": "rimraf bin && tsc"
+    "build": "npm run bundle-docs && rimraf bin && tsc",
+    "lint": "tslint --fix -c tslint.json 'src/**/*.ts'",
+    "serve-docs": "swagger-ui-watcher ./specification/swagger/index.json",
+    "bundle-docs": "swagger-ui-watcher ./specification/swagger/index.json --bundle=./specification/openapi.json"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -33,6 +36,7 @@
     "lint-staged": "^8.1.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.15.3",
+    "swagger-ui-watcher": "^2.1.6",
     "ts-node": "^7.0.1",
     "tslint": "^5.12.0",
     "tslint-config-airbnb": "^5.11.1",

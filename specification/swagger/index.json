@@ -1,0 +1,17 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Express-typescript-starter",
+    "description": "A HTTP/JSON API",
+    "version": "2.0.0",
+    "contact": {
+      "email": "tech@pepperhq.com"
+    }
+  },
+  "tags": {
+    "$ref": "./tags.json"
+  },
+  "paths": {
+    "$ref": "./paths.json"
+  }
+}
