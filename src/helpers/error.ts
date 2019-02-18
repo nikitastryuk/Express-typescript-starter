@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 
-interface IApiError extends Error {
+interface IApiError {
   statusCode: number;
   message: string;
 }

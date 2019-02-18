@@ -4,5 +4,9 @@ import expressAsyncHandler from 'express-async-handler';
 import { getUser } from './user.controller';
 
 export const UserRouter = (): Router => {
-  return Router().get('/user', expressAsyncHandler(getUser));
+  const router = Router();
+
+  router.get('/', expressAsyncHandler(getUser));
+
+  return router;
 };

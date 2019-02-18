@@ -1,28 +1,18 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import mongoose from 'mongoose';
 
-import { initDatabase } from './config/database';
-import { ExpressServer } from './config/server';
+import { disconnectFromDatabase } from './config/database';
+import { startServer } from './config/express.server';
+import { checkEnv } from './helpers/checkEnv';
+
 (async () => {
   try {
     // Check environment variables
-    if (!process.env.PORT) {
-      throw new Error('PORT environment variable must be defined');
-    }
-    if (!process.env.NAME) {
-      throw new Error('NAME environment variable must be defined');
-    }
-    if (!process.env.NODE_ENV) {
-      throw new Error('NODE_ENV environment variable must be defined');
-    }
-    // Initialize database
-    await initDatabase();
+    checkEnv(['PORT', 'NAME', 'NODE_ENV', 'DB_URL']);
     // Start server
-    const server = new ExpressServer();
-    await server.start();
+    await startServer();
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 })();
 
@@ -37,7 +27,8 @@ process.on('unhandledRejection', (error: Error) => {
 });
 
 process.on('SIGINT', async () => {
-  await mongoose.connection.close();
+  // Disconnect from db
+  await disconnectFromDatabase();
   console.log('Mongoose connection is disconnected due to application termination');
   process.exit();
 });
