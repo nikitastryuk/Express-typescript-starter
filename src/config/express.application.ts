@@ -1,14 +1,16 @@
 import bodyParser from 'body-parser';
+import { errors } from 'celebrate';
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
+import httpStatus from 'http-status';
 import morgan from 'morgan';
 
 import { DocumentationRouter } from '../components/documentation/documentation.route';
 import { InfoRouter } from '../components/info/info.route';
 import { UserRouter } from '../components/user/user.route';
-import { ApiError, ErrorResponse } from '../helpers/error';
+import { ApiError, ErrorResponse, isApiError } from '../helpers/error';
 
 export class ExpressApplication {
   public application: express.Application;
@@ -20,7 +22,7 @@ export class ExpressApplication {
     // Routes
     this.configureRoutes();
     // Error-handling must be last
-    this.configureErrorHandler();
+    this.configureErrorHandlers();
   }
 
   private configureDefaultMiddlewares() {
@@ -42,17 +44,21 @@ export class ExpressApplication {
     this.application.use('/', InfoRouter());
     // Swagger
     this.application.use('/api-docs', DocumentationRouter());
-    this.application.use('/user', UserRouter());
+    this.application.use('/users', UserRouter());
     // 404
     this.application.use((_req: express.Request, _res: express.Response, next: express.NextFunction) => {
       next(new ApiError(ErrorResponse.WrongEndpoint));
     });
   }
 
-  private configureErrorHandler() {
-    // TODO: err type
+  private configureErrorHandlers() {
+    // Celebrate error handler
+    this.application.use(errors());
+    // Default error handler
     this.application.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-      return res.status(err.statusCode).send(err.message);
+      // Api errors
+      if (isApiError(err)) return res.status(err.statusCode).json({ statusCode: err.statusCode, message: err.message });
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ statusCode: httpStatus.INTERNAL_SERVER_ERROR, message: err.message });
     });
   }
 }

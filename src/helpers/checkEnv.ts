@@ -1,16 +1,16 @@
 export const checkEnv = (variables: string[]) => {
-  const missing: string[] = [];
+  const missingVars: string[] = [];
 
   variables.forEach(variable => {
     if (!process.env[variable]) {
-      missing.push(variable);
+      missingVars.push(variable);
     }
   });
 
-  if (missing.length) {
-    if (missing.length === 1) {
-      throw new Error(`Missing environment variable: ${missing[0]}`);
+  if (missingVars.length) {
+    if (missingVars.length === 1) {
+      throw new Error(`Missing environment variable: ${missingVars[0]}`);
     }
-    throw new Error(`Missing environment variables: ${missing.join(', ')}`);
+    throw new Error(`Missing environment variables: ${missingVars.join(', ')}`);
   }
 };

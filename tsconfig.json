@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     // Basic Options
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/types/*"]
+    },
     "module": "commonjs",
     "target": "esnext",
     "removeComments": true,
@@ -17,9 +21,9 @@
     // Module Resolution Options
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "outDir": "bin/",
+    "outDir": "bin",
     "esModuleInterop": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/node_modules"]
+  "exclude": ["node_modules"]
 }

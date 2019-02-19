@@ -1,4 +1,5 @@
 import http from 'http';
+
 import { connectToDatabase, disconnectFromDatabase } from './database';
 import { ExpressApplication } from './express.application';
 

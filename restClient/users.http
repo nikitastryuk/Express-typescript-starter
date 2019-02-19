@@ -1,0 +1,37 @@
+@userId=5c6c7de578011b9467d2d40d
+@apihost=http://localhost:3000
+
+### Get user by id
+GET {{apihost}}/users/{{userId}}
+
+### Get all users
+GET {{apihost}}/users
+
+### Create user
+POST {{apihost}}/users
+Content-Type: application/json
+
+{
+  "firstName": "firstName",
+  "lastName": "lastName",
+  "location": {
+    "lat": 0,
+    "lng": 0,
+    "name": "testName"
+  }
+}
+
+### Update user by id
+PUT  {{apihost}}/users/{{userId}}
+Content-Type: application/json
+
+{
+  "location": {
+    "lat": 0,
+    "lng": 0,
+    "name": "testName"
+  }
+}
+
+### Delete user by id
+DELETE  {{apihost}}/users/{{userId}}
