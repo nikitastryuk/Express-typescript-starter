@@ -1,6 +1,10 @@
 [
   {
     "name": "Health",
-    "description": "API service status."
+    "description": "API service status"
+  },
+  {
+    "name": "Users",
+    "description": "Users endpoints"
   }
 ]

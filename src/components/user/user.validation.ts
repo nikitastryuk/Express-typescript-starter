@@ -12,20 +12,36 @@ export const getUserValidator = celebrate({
 
 export const deleteUserValidator = getUserValidator;
 
+export const getUsersValidator = celebrate({
+  query: Joi.object()
+    .keys({
+      lat: Joi.number()
+        .min(-90)
+        .max(90),
+      lng: Joi.number()
+        .min(-180)
+        .max(180),
+      sort: Joi.string(),
+    })
+    .and('lat', 'lng', 'sort'),
+});
+
 export const createUserValidator = celebrate({
   body: {
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     location: Joi.object().keys({
-      lat: Joi.number()
-        .min(-90)
-        .max(90)
-        .required(),
-      lng: Joi.number()
-        .min(-180)
-        .max(180)
-        .required(),
-      name: Joi.string().required(),
+      coordinates: Joi.array().items(
+        Joi.number()
+          .min(-90)
+          .max(90)
+          .required(),
+        Joi.number()
+          .min(-180)
+          .max(180)
+          .required(),
+      ),
+      name: Joi.string(),
     }),
   },
 });
@@ -36,14 +52,16 @@ export const updateUserValidator = celebrate({
     lastName: Joi.string(),
     location: Joi.object()
       .keys({
-        lat: Joi.number()
-          .min(-90)
-          .max(90),
-        lng: Joi.number()
-          .min(-180)
-          .max(180),
+        coordinates: Joi.array().items(
+          Joi.number()
+            .min(-90)
+            .max(90),
+          Joi.number()
+            .min(-180)
+            .max(180),
+        ),
         name: Joi.string(),
       })
-      .and('lat', 'lng', 'name'),
+      .and('coordinates', 'name'),
   },
 });

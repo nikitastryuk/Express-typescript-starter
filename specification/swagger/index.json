@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Express-typescript-starter",
-    "description": "A HTTP/JSON API",
-    "version": "2.0.0",
+    "description": "A HTTP/JSON API for starter project",
+    "version": "1.0.0",
     "contact": {
       "email": "tech@pepperhq.com"
     }
@@ -13,5 +13,8 @@
   },
   "paths": {
     "$ref": "./paths.json"
+  },
+  "components": {
+    "$ref": "./components.json"
   }
 }

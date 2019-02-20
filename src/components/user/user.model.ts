@@ -19,18 +19,20 @@ const UserSchema = new Schema({
     required: true,
     type: String,
   },
+  // GeoJSON
   location: {
-    required: true,
+    coordinates: {
+      index: '2dsphere',
+      required: true,
+      type: [Number],
+    },
+    name: {
+      required: true,
+      type: String,
+    },
     type: {
-      lat: {
-        type: Number,
-      },
-      lng: {
-        type: Number,
-      },
-      name: {
-        type: String,
-      },
+      default: 'Point',
+      type: String,
     },
   },
 });

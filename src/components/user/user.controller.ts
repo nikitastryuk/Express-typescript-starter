@@ -4,9 +4,27 @@ import httpStatus from 'http-status';
 import { ApiError, ErrorResponse } from '../../helpers/error';
 import { User } from './user.model';
 
-export const getUsers = async (_req: Request, res: Response) => {
-  const users = await User.find({});
-  res.json(users);
+export const getUsers = async (req: Request, res: Response) => {
+  const { sort, lat, lng } = req.query;
+  if (sort === 'location') {
+    const coordinates = [+lng, +lat];
+    const userss = await User.aggregate([
+      {
+        $geoNear: {
+          distanceField: 'distance',
+          distanceMultiplier: 1 / 1000,
+          near: { coordinates, type: 'Point' },
+          spherical: true,
+        },
+      },
+    ]);
+    console.log(lat, lng);
+    return res.json(userss);
+  }
+
+  const searchOptions = {};
+  const users = await User.find(searchOptions);
+  return res.json(users);
 };
 
 export const getUser = async (req: Request, res: Response) => {
@@ -40,6 +58,6 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
-  await User.findByIdAndDelete(userId);
+  await User.findOneAndDelete(userId);
   res.status(httpStatus.OK).send();
 };

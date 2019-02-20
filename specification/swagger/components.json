@@ -1,0 +1,13 @@
+{
+  "schemas": {
+    "UserReadSchema": {
+      "$ref": "./schemas/user/userReadSchema.json"
+    },
+    "UserCreateSchema": {
+      "$ref": "./schemas/user/userCreateSchema.json"
+    },
+    "UserUpdateSchema": {
+      "$ref": "./schemas/user/userUpdateSchema.json"
+    }
+  }
+}

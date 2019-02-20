@@ -1,5 +1,11 @@
 {
   "/": {
     "$ref": "./paths/info.json"
+  },
+  "/users": {
+    "$ref": "./paths/user/users.json"
+  },
+  "/users/{id}": {
+    "$ref": "./paths/user/users.id.json"
   }
 }

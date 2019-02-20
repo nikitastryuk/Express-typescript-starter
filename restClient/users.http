@@ -1,11 +1,13 @@
-@userId=5c6c7de578011b9467d2d40d
+@userId=5c6dc84f8585c80846da71ea
 @apihost=http://localhost:3000
 
 ### Get user by id
 GET {{apihost}}/users/{{userId}}
 
 ### Get all users
-GET {{apihost}}/users
+GET {{apihost}}/users?sort=location&lat=0&lng=0
+// Queries:
+// sort=location lat=0 lng=0
 
 ### Create user
 POST {{apihost}}/users
@@ -15,8 +17,7 @@ Content-Type: application/json
   "firstName": "firstName",
   "lastName": "lastName",
   "location": {
-    "lat": 0,
-    "lng": 0,
+     "coordinates": [1, 0],
     "name": "testName"
   }
 }
@@ -27,8 +28,7 @@ Content-Type: application/json
 
 {
   "location": {
-    "lat": 0,
-    "lng": 0,
+    "coordinates": [2, 3],
     "name": "testName"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string",
+      "example": "5c6dc84f8585c80846da71ea"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "location": {
+      "$ref": "./chunks/location.json"
+    }
+  }
+}

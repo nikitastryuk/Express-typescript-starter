@@ -1,0 +1,74 @@
+{
+  "get": {
+    "tags": ["Users"],
+    "summary": "Gets users",
+    "description": "Gets all users by default. \n\n Gets all users enriched by distance(km) field if sort=location provided",
+    "parameters": [
+      {
+        "in": "query",
+        "name": "sort",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Available options: location(sort=location, lat and lng required)"
+      },
+      {
+        "in": "query",
+        "name": "lat",
+        "schema": {
+          "type": "number"
+        },
+        "description": "Latitude point"
+      },
+      {
+        "in": "query",
+        "name": "lng",
+        "schema": {
+          "type": "number"
+        },
+        "description": "Longitude point"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/user/userReadSchema.json"
+            }
+          }
+        }
+      }
+    }
+  },
+  "post": {
+    "tags": ["Users"],
+    "summary": "Creates new user",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../schemas/user/userCreateSchema.json"
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../schemas/user/userReadSchema.json"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Validation error"
+      }
+    }
+  }
+}
