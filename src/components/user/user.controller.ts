@@ -8,7 +8,8 @@ export const getUsers = async (req: Request, res: Response) => {
   const { sort, lat, lng } = req.query;
   if (sort === 'location') {
     const coordinates = [+lng, +lat];
-    const userss = await User.aggregate([
+    // Enrich users with distance field
+    const enrichedUsers = await User.aggregate([
       {
         $geoNear: {
           distanceField: 'distance',
@@ -18,12 +19,9 @@ export const getUsers = async (req: Request, res: Response) => {
         },
       },
     ]);
-    console.log(lat, lng);
-    return res.json(userss);
+    return res.json(enrichedUsers);
   }
-
-  const searchOptions = {};
-  const users = await User.find(searchOptions);
+  const users = await User.find({});
   return res.json(users);
 };
 

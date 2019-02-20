@@ -5,7 +5,7 @@
 GET {{apihost}}/users/{{userId}}
 
 ### Get all users
-GET {{apihost}}/users?sort=location&lat=0&lng=0
+GET {{apihost}}/users?sort=location&lat=0&lng=0&a=2
 // Queries:
 // sort=location lat=0 lng=0
 
@@ -17,7 +17,7 @@ Content-Type: application/json
   "firstName": "firstName",
   "lastName": "lastName",
   "location": {
-     "coordinates": [1, 0],
+    "coordinates": [1, 0],
     "name": "testName"
   }
 }

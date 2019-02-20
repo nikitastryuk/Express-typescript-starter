@@ -23,7 +23,8 @@ export const getUsersValidator = celebrate({
         .max(180),
       sort: Joi.string(),
     })
-    .and('lat', 'lng', 'sort'),
+    .and('lat', 'lng', 'sort')
+    .unknown(true),
 });
 
 export const createUserValidator = celebrate({

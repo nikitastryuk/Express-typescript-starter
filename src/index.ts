@@ -3,13 +3,12 @@ dotenv.config();
 
 import { disconnectFromDatabase } from './config/database';
 import { startServer } from './config/express.server';
-import { checkEnv } from './helpers/checkEnv';
+import { checkEnv } from './helpers/helpers';
 
 (async () => {
   try {
-    // Check environment variables
+    // Check process.env variables before starting the server
     checkEnv(['PORT', 'NAME', 'NODE_ENV', 'DB_URL']);
-    // Start server
     await startServer();
   } catch (error) {
     console.log(error.message);
