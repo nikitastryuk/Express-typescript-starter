@@ -1,12 +1,12 @@
+import joiObjectid from '@wegolook/joi-objectid';
 import { celebrate, Joi } from 'celebrate';
-import joiObjectid from 'joi-objectid';
 
 // Extend joi with objectId
-Joi.objectId = joiObjectid(Joi);
+const myJoi = Joi.extend(joiObjectid);
 
 export const getUserValidator = celebrate({
   params: {
-    id: Joi.objectId().required(),
+    id: myJoi.objectId().required(),
   },
 });
 

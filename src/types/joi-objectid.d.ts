@@ -1,1 +1,0 @@
-declare module 'joi-objectid';

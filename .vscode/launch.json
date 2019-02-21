@@ -4,9 +4,19 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/bin/src/index.js",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
+      "name": "Debug Node",
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "args": ["${workspaceRoot}/src/index.ts"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Tests",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+      "args": ["--config", "${workspaceRoot}/jest.config.js", "--runInBand"],
+      "console": "integratedTerminal"
     }
   ]
 }
