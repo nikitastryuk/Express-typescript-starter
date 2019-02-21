@@ -5,24 +5,34 @@ import { ApiError, ErrorResponse } from '../../helpers/error';
 import { User } from './user.model';
 
 export const getUsers = async (req: Request, res: Response) => {
-  const { sort, lat, lng } = req.query;
+  const { sort, lat, lng, offset, limit } = req.query;
   if (sort === 'location') {
     const coordinates = [+lng, +lat];
-    // Enrich users with distance field
-    const enrichedUsers = await User.aggregate([
-      {
-        $geoNear: {
-          distanceField: 'distance',
-          distanceMultiplier: 1 / 1000,
-          near: { coordinates, type: 'Point' },
-          spherical: true,
-        },
+    const query = {
+      $geoNear: {
+        distanceField: 'distance',
+        distanceMultiplier: 1 / 1000,
+        near: { coordinates, type: 'Point' },
+        spherical: true,
       },
-    ]);
-    return res.json(enrichedUsers);
+    };
+    // Enrich users with distance field
+    const enrichedUsers = await User.aggregate([query, { $skip: +offset }, { $limit: +limit }]);
+    const totalCount = (await User.aggregate([query])).length;
+    return res.json({
+      totalCount,
+      users: enrichedUsers,
+    });
   }
-  const users = await User.find({});
-  return res.json(users);
+  const query = {};
+  const users = await User.find(query)
+    .skip(+offset)
+    .limit(+limit);
+  const totalCount = (await User.find(query)).length;
+  return res.json({
+    totalCount,
+    users,
+  });
 };
 
 export const getUser = async (req: Request, res: Response) => {
@@ -39,7 +49,7 @@ export const createUser = async (req: Request, res: Response) => {
   user.lastName = lastName;
   user.location = location;
   await user.save();
-  res.json(user);
+  res.status(httpStatus.CREATED).json(user);
 };
 
 export const updateUser = async (req: Request, res: Response) => {

@@ -8,7 +8,7 @@ import { checkEnv } from './helpers/helpers';
 (async () => {
   try {
     // Check process.env variables before starting the server
-    checkEnv(['PORT', 'NAME', 'NODE_ENV', 'DB_URL']);
+    checkEnv(['PORT', 'NAME', 'NODE_ENV', 'DB_URL', 'DB_LOCAL_URL']);
     await startServer();
   } catch (error) {
     console.log(error.message);

@@ -6,11 +6,29 @@
     "parameters": [
       {
         "in": "query",
+        "name": "offset",
+        "required": true,
+        "schema": {
+          "type": "number"
+        },
+        "description": "Amount of items to skip"
+      },
+      {
+        "in": "query",
+        "name": "limit",
+        "required": true,
+        "schema": {
+          "type": "number"
+        },
+        "description": "Amount of items to get"
+      },
+      {
+        "in": "query",
         "name": "sort",
         "schema": {
           "type": "string"
         },
-        "description": "Available options: location(sort=location, lat and lng required)"
+        "description": "Available options: location \n\n sort=location requires 'lat' and 'lng' query params"
       },
       {
         "in": "query",
@@ -35,7 +53,16 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "../../schemas/user/userReadSchema.json"
+              "type": "object",
+              "properties": {
+                "users": {
+                  "$ref": "../../schemas/user/userReadSchema.json"
+                },
+                "totalCount": {
+                  "type": "number",
+                  "example": 3
+                }
+              }
             }
           }
         }

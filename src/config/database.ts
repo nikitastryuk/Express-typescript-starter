@@ -13,8 +13,12 @@ mongoose.connection
   });
 
 export async function connectToDatabase() {
+  let url = process.env.DB_URL as string;
+  if (process.env.NODE_ENV === 'test') {
+    url = process.env.DB_LOCAL_URL as string;
+  }
   await mongoose.connect(
-    process.env.DB_URL as string,
+    url,
     // Fix deprecation warnings
     { useNewUrlParser: true, useCreateIndex: true },
   );

@@ -18,10 +18,12 @@ export const getUsersValidator = celebrate({
       lat: Joi.number()
         .min(-90)
         .max(90),
+      limit: Joi.number().required(),
       lng: Joi.number()
         .min(-180)
         .max(180),
-      sort: Joi.string(),
+      offset: Joi.number().required(),
+      sort: Joi.string().valid('location'),
     })
     .and('lat', 'lng', 'sort')
     .unknown(true),
@@ -42,7 +44,7 @@ export const createUserValidator = celebrate({
           .max(180)
           .required(),
       ),
-      name: Joi.string(),
+      name: Joi.string().required(),
     }),
   },
 });
