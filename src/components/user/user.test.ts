@@ -97,7 +97,7 @@ describe('Users', () => {
         expect(response.status).toBe(httpStatus.BAD_REQUEST);
       });
       it('should be 404 for not existing {id}', async () => {
-        const notExistingId = '5c6dc84f8585c80846da71ea';
+        const notExistingId = '1c6dc84f8585c80846da71ea';
         const response = await supertest(apiUrl).get(`/${notExistingId}`);
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });

@@ -1,2 +1,8 @@
+# Packages
 node_modules/
+# Compiled typescript
 bin
+# Logs
+log
+# MacOS specific
+.DS_Store

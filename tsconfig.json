@@ -3,7 +3,7 @@
     // Basic Options
     "baseUrl": ".",
     "paths": {
-      "*": ["src/types/*"]
+      "*": ["src/typings", "node_modules/@types"]
     },
     "module": "commonjs",
     "target": "esnext",
@@ -22,9 +22,8 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "outDir": "bin",
-    "skipLibCheck": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

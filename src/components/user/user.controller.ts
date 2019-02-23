@@ -4,6 +4,10 @@ import httpStatus from 'http-status';
 import { ApiError, ErrorResponse } from '../../helpers/error';
 import { User } from './user.model';
 
+/* ---------------------------------
+GET
+--------------------------------- */
+
 export const getUsers = async (req: Request, res: Response) => {
   const { sort, lat, lng, offset, limit } = req.query;
   if (sort === 'location') {
@@ -42,6 +46,10 @@ export const getUser = async (req: Request, res: Response) => {
   res.json(user);
 };
 
+/* ---------------------------------
+POST
+--------------------------------- */
+
 export const createUser = async (req: Request, res: Response) => {
   const { firstName, lastName, location } = req.body;
   const user = new User();
@@ -51,6 +59,10 @@ export const createUser = async (req: Request, res: Response) => {
   await user.save();
   res.status(httpStatus.CREATED).json(user);
 };
+
+/* ---------------------------------
+PUT
+--------------------------------- */
 
 export const updateUser = async (req: Request, res: Response) => {
   const { firstName, lastName, location } = req.body;
@@ -63,6 +75,10 @@ export const updateUser = async (req: Request, res: Response) => {
   await user.save();
   res.json(user);
 };
+
+/* ---------------------------------
+DELETE
+--------------------------------- */
 
 export const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;

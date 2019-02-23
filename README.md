@@ -5,6 +5,7 @@
 - Express
 - TypeScript
 - Mongoose
+- Redis
 - Jest
 - Swagger
 - Rest Client
@@ -23,7 +24,7 @@ export NAME=
 ```
 
 ### Install Modules
-Make sure `node`, `npm`, `mongo`
+Make sure `node`, `npm`
 ```Shell
 npm install
 ```
@@ -31,7 +32,7 @@ npm install
 ## Run | Debug | Build | Test | Deploy
 
 #### Run
-Development:
+Development (watch mode):
 ```Shell
 npm run dev
 ```
@@ -55,11 +56,15 @@ npm run build
 ```
 
 #### Test
+Make sure local `mongo` running
 ```Shell
 npm run test
 ```
 
 #### Deploy
+In progress
+
+## CI
 In progress
 
 ## Swagger

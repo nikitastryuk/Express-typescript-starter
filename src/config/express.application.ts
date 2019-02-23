@@ -6,6 +6,7 @@ import express from 'express';
 import helmet from 'helmet';
 import httpStatus from 'http-status';
 import morgan from 'morgan';
+import rotatingFileStream from 'rotating-file-stream';
 
 import { DocumentationRouter } from '../components/documentation/documentation.route';
 import { InfoRouter } from '../components/info/info.route';
@@ -34,7 +35,21 @@ export class ExpressApplication {
     this.application.use(bodyParser.json());
     // Compress response
     this.application.use(compression());
-    // Logger
+    // File logger
+    // Create a rotating write stream
+    const accessLogStream = rotatingFileStream('access.log', {
+      interval: '1d',
+      path: 'log',
+    });
+    this.application.use(
+      morgan(':status ":method :url" [:date[web]] ":user-agent"  :response-time ms', {
+        stream: accessLogStream,
+        skip(_req, res) {
+          return res.statusCode < 404;
+        },
+      }),
+    );
+    // Terminal logger
     if (process.env.NODE_ENV === 'dev') {
       this.application.use(morgan('dev'));
     }
