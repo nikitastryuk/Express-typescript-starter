@@ -32,6 +32,8 @@ npm install
 ## Run | Debug | Build | Test | Deploy
 
 #### Run
+Make sure `redis` running
+
 Development (watch mode):
 ```Shell
 npm run dev
