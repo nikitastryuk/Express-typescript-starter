@@ -1,7 +1,8 @@
 import '@types/redis';
+
 declare module 'redis' {
   export interface RedisClient {
-    setAsync(key: string, value: string): Promise<void>;
-    getAsync(key: string): Promise<string>;
+    hsetAsync(hashKey: string, field: string, value: string, ...args: any): Promise<number>;
+    hgetAsync(hashKey: string, key: string): Promise<string>;
   }
 }

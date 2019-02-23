@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
+import { removeHashKeyFromCache } from '../../../src/config/cache';
 import { ApiError, ErrorResponse } from '../../helpers/error';
 import { User } from './user.model';
 
@@ -41,7 +42,9 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).cache({
+    hashKey: userId,
+  });
   if (!user) throw new ApiError(ErrorResponse.MissingResourceId('User', userId));
   res.json(user);
 };
@@ -73,6 +76,7 @@ export const updateUser = async (req: Request, res: Response) => {
   if (lastName) user.lastName = lastName;
   if (location) user.location = location;
   await user.save();
+  removeHashKeyFromCache(userId);
   res.json(user);
 };
 

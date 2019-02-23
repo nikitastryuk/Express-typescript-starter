@@ -7,7 +7,6 @@ import helmet from 'helmet';
 import httpStatus from 'http-status';
 import morgan from 'morgan';
 import rotatingFileStream from 'rotating-file-stream';
-
 import { DocumentationRouter } from '../components/documentation/documentation.route';
 import { InfoRouter } from '../components/info/info.route';
 import { UserRouter } from '../components/user/user.route';
@@ -36,7 +35,6 @@ export class ExpressApplication {
     // Compress response
     this.application.use(compression());
     // File logger
-    // Create a rotating write stream
     const accessLogStream = rotatingFileStream('access.log', {
       interval: '1d',
       path: 'log',

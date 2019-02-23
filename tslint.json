@@ -11,7 +11,7 @@
     "space-before-function-paren": false,
     "max-classes-per-file": false,
     "no-shadowed-variable": false,
-    "interface-name": [true, "never-prefix"],
+    "interface-name": false,
     "max-line-length": [true, 150],
     "no-implicit-dependencies": [true, "dev"],
     "no-unused-variable": [

@@ -1,37 +1,57 @@
 import mongoose from 'mongoose';
-import redis from 'redis';
+import redis, { RedisClient } from 'redis';
 import util from 'util';
 
-const client = redis.createClient(process.env.redisUrl as string);
+let redisClient: RedisClient;
 
-client.getAsync = util.promisify(client.get);
-client.setAsync = util.promisify(client.set);
+export function startRedisConnection() {
+  redisClient = redis.createClient();
 
-// Monkey patch mongoose exec method
-const exec = mongoose.Query.prototype.exec;
+  redisClient.hgetAsync = util.promisify(redisClient.hget);
+  redisClient.hsetAsync = util.promisify(redisClient.hset);
 
-// mongoose.Query.prototype.cache = function(options = {}) {
-//   this.useCache = true;
+  // Monkey patch mongoose exec method
+  const exec = mongoose.Query.prototype.exec;
 
-//   this.hashKey = JSON.stringify(options.key || '');
+  mongoose.Query.prototype.cache = function(options: any = {}) {
+    this.useCache = true;
+    // Dynamic top-level hashKey
+    this.hashKey = JSON.stringify(options.hashKey || '');
 
-//   return this;
-// };
+    return this;
+  };
 
-mongoose.Query.prototype.exec = async function() {
-  // if (!this.useCache) {
-  //   return exec.apply(this, arguments);
-  // }
-  console.log(this.getQuery());
-  /* tslint:disable-next-line */
-  console.log(this);
-  // const key = JSON.stringify({ ...this.getQuery, collection: this.mongooseCollection.name });
-  // const cacheValue = await client.hget(this.hashKey, key);
-  // if (cacheValue) {
-  //   const doc = JSON.parse(cacheValue);
-  //   return Array.isArray(doc) ? doc.map(d => new this.model(d)) : new this.model(doc);
-  // }
-  return exec.apply(this, arguments);
-  // client.hset(this.hashKey, key, JSON.stringify(result), 'EX', 10);
-  // return result;
-};
+  mongoose.Query.prototype.exec = async function() {
+    // No cache
+    if (!this.useCache) {
+      return exec.apply(this, arguments);
+    }
+
+    // {...query, collection: name }
+    const key = JSON.stringify({ ...this.getQuery(), collection: this.mongooseCollection.name });
+    // Get cache
+    const cacheValue = await redisClient.hgetAsync(this.hashKey, key);
+    if (cacheValue) {
+      const value = JSON.parse(cacheValue);
+      // Mongoose exec expects us to return mongoose documents
+      return Array.isArray(value) ? value.map(item => new this.model(item)) : new this.model(value);
+    }
+
+    const result = await exec.apply(this, arguments);
+    // Set cache
+    // key: ...hashkey
+    // value:  { nestedKey: ...key, nestedValue: ...result }
+    if (result) {
+      redisClient.hsetAsync(this.hashKey, key, JSON.stringify(result));
+    }
+    return result;
+  };
+}
+
+export function stopRedisConnection() {
+  redisClient.quit();
+}
+
+export function removeHashKeyFromCache(hashKey: any) {
+  redisClient.del(JSON.stringify(hashKey));
+}

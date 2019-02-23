@@ -1,14 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { disconnectFromDatabase } from './config/database';
-import { startServer } from './config/express.server';
-import { checkEnv } from './helpers/helpers';
+import { startServer, stopServer } from './config/express.server';
+import { checkEnv } from './helpers';
 
 (async () => {
   try {
     // Check process.env variables before starting the server
-    checkEnv(['PORT', 'NAME', 'NODE_ENV', 'DB_URL', 'DB_LOCAL_URL', 'REDIS_URL']);
+    checkEnv(['PORT', 'NAME', 'NODE_ENV', 'DB_URL', 'DB_LOCAL_URL']);
     await startServer();
   } catch (error) {
     console.log(error.message);
@@ -27,7 +26,7 @@ process.on('unhandledRejection', (error: Error) => {
 
 process.on('SIGINT', async () => {
   // Disconnect from db
-  await disconnectFromDatabase();
+  await stopServer();
   console.log('Mongoose connection is disconnected due to application termination');
   process.exit();
 });
