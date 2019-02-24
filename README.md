@@ -9,6 +9,7 @@
 - Jest
 - Swagger
 - Rest Client
+- CircleCI
 
 ## Running the project locally
 In order to run the project you must have some environment variables set. It is reccomended that you add the following to your `~/.bash_profile` or equivalent, replacing the values as appropriate.
