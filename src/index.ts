@@ -25,7 +25,7 @@ process.on('unhandledRejection', (error: Error) => {
 });
 
 process.on('SIGINT', async () => {
-  // Disconnect from db
+  // Graceful shutdown
   await stopServer();
   console.log('Mongoose connection is disconnected due to application termination');
   process.exit();
