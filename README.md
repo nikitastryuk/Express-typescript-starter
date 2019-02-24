@@ -31,7 +31,7 @@ Make sure `node`, `npm`
 npm install
 ```
 
-## Run | Debug | Build | Test | Deploy
+## Run | Debug | Build | Test
 
 #### Run
 Make sure `redis` running
@@ -65,10 +65,18 @@ Make sure local `mongo` running
 npm run test
 ```
 
-#### Deploy
-In progress
-
 ## CI
+The project is built using a continuous integration approach with `CircleCi`. All testing takes place in containers which we can define ourselves.
+
+CI includes the following steps:
+
+Linting
+Node Module Security Audit
+Tests
+
+If any one of those steps fail then a build is considered unfit for production release.
+
+## Deploy
 In progress
 
 ## Swagger
