@@ -9,6 +9,7 @@
 - Jest
 - Swagger
 - Rest Client
+- Docker
 - CircleCI
 
 ## Running the project locally

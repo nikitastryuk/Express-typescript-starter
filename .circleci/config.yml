@@ -6,9 +6,6 @@ jobs:
       - image: circleci/mongo:latest
       - image: circleci/redis:latest
     working_directory: ~/repo
-    branches:
-      only:
-        - master
     steps:
       - checkout
       # Download and cache dependencies
