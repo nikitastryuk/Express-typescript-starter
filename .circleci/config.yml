@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:lts
-      - image: circleci/mongo:latest
-      - image: circleci/redis:latest
     working_directory: ~/repo
     steps:
       - checkout
