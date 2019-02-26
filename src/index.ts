@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 dotenv.config();
-
 import { startServer, stopServer } from './config/express.server';
 import { checkEnv } from './helpers';
 
@@ -28,5 +27,5 @@ process.on('SIGINT', async () => {
   // Graceful shutdown
   await stopServer();
   console.log('Mongoose connection is disconnected due to application termination');
-  process.exit();
+  process.exit(0);
 });
