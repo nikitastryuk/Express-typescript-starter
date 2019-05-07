@@ -1,75 +1,39 @@
-import { Request, Response } from 'express';
-import httpStatus from 'http-status';
+import { isNumber } from '../../helpers/typeGuards';
+import { IUser, IUserLocation } from './user.model';
+import { IUserRepository, IUserUpdateFields } from './user.repo';
 
-import { removeHashKeyFromCache } from '../../../src/config/cache';
-import { ApiError, ErrorResponse } from '../../helpers/error';
-import { User } from './user.model';
+// TODO: Move to shared models
+export interface IPagedCollection<T> {
+  data: T[];
+  totalCount?: number;
+}
+export interface IUserController {
+  getUsers(offset: number, limit: number, sort?: string, lng?: number, lat?: number): Promise<IPagedCollection<IUser>>;
+  getUser(id: string): Promise<IUser>;
+  createUser(firstName: string, lastName: string, location: IUserLocation): Promise<IUser>;
+  updateUser(id: string, updates: IUserUpdateFields): Promise<IUser>;
+  deleteUser(id: string): Promise<void>;
+}
 
-export const getUsers = async (req: Request, res: Response) => {
-  const { sort, lat, lng, offset, limit } = req.query;
-  if (sort === 'location') {
-    const coordinates = [+lng, +lat];
-    const query = {
-      $geoNear: {
-        distanceField: 'distance',
-        distanceMultiplier: 1 / 1000,
-        near: { coordinates, type: 'Point' },
-        spherical: true,
-      },
-    };
-    // Enrich users with distance field
-    const enrichedUsers = await User.aggregate([query, { $skip: +offset }, { $limit: +limit }]);
-    const totalCount = (await User.aggregate([query])).length;
-    return res.json({
-      totalCount,
-      users: enrichedUsers,
-    });
+export class UserController implements IUserController {
+  constructor(private readonly userRepository: IUserRepository) {}
+
+  public async getUsers(offset: number, limit: number, sort?: string, lng?: number, lat?: number): Promise<IPagedCollection<IUser>> {
+    if (sort === 'location' && isNumber(lng) && isNumber(lat)) {
+      return this.userRepository.getUsersEnrichedByDistance(lng, lat, offset, limit);
+    }
+    return this.userRepository.getUsers(offset, limit);
   }
-  const query = {};
-  const users = await User.find(query)
-    .skip(+offset)
-    .limit(+limit);
-  const totalCount = (await User.find(query)).length;
-  return res.json({
-    totalCount,
-    users,
-  });
-};
-
-export const getUser = async (req: Request, res: Response) => {
-  const userId = req.params.id;
-  const user = await User.findById(userId).cache({
-    hashKey: userId,
-  });
-  if (!user) throw new ApiError(ErrorResponse.MissingResourceId('User', userId));
-  res.json(user);
-};
-
-export const createUser = async (req: Request, res: Response) => {
-  const { firstName, lastName, location } = req.body;
-  const user = new User();
-  user.firstName = firstName;
-  user.lastName = lastName;
-  user.location = location;
-  await user.save();
-  res.status(httpStatus.CREATED).json(user);
-};
-
-export const updateUser = async (req: Request, res: Response) => {
-  const { firstName, lastName, location } = req.body;
-  const userId = req.params.id;
-  const user = await User.findById(userId);
-  if (!user) throw new ApiError(ErrorResponse.MissingResourceId('User', userId));
-  if (firstName) user.firstName = firstName;
-  if (lastName) user.lastName = lastName;
-  if (location) user.location = location;
-  await user.save();
-  removeHashKeyFromCache(userId);
-  res.json(user);
-};
-
-export const deleteUser = async (req: Request, res: Response) => {
-  const userId = req.params.id;
-  await User.findOneAndDelete(userId);
-  res.status(httpStatus.OK).send();
-};
+  public async getUser(id: string): Promise<IUser> {
+    return this.userRepository.getUser(id);
+  }
+  public async createUser(firstName: string, lastName: string, location: IUserLocation): Promise<IUser> {
+    return this.userRepository.createUser(firstName, lastName, location);
+  }
+  public async updateUser(id: string, updates: IUserUpdateFields): Promise<IUser> {
+    return this.userRepository.updateUser(id, updates);
+  }
+  public async deleteUser(id: string): Promise<void> {
+    return this.userRepository.deleteUser(id);
+  }
+}

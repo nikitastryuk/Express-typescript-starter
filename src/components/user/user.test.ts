@@ -3,8 +3,14 @@ dotenv.config();
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 
-import { startServer, stopServer } from '../../config/express.server';
+import { Server } from '../../config/server';
+import { UserController } from './user.controller';
 import { User } from './user.model';
+import { UserRepository } from './user.repo';
+
+const userRepository = new UserRepository();
+const userController = new UserController(userRepository);
+const server = new Server({ userController });
 
 const getRandomExistingUserId = async () => {
   const response = await supertest(apiUrl).get(`?offset=0&limit=${testUsers.length}`);
@@ -41,11 +47,14 @@ const testUsers = [
 
 describe('Users', () => {
   beforeAll(async () => {
-    await startServer();
+    await server.start();
   });
   beforeEach(async () => {
     await User.deleteMany({});
     await User.create(testUsers);
+  });
+  afterAll(async () => {
+    await server.stop();
   });
   describe('GET', () => {
     describe('/users', () => {
@@ -257,9 +266,5 @@ describe('Users', () => {
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });
     });
-  });
-
-  afterAll(async () => {
-    await stopServer();
   });
 });

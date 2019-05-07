@@ -4,6 +4,8 @@ import util from 'util';
 
 let redisClient: RedisClient;
 
+// TODO: Replace with CacheService class
+// Just experimenting
 export function startRedisConnection() {
   redisClient = redis.createClient();
 

@@ -10,17 +10,24 @@ import morgan from 'morgan';
 import rotatingFileStream from 'rotating-file-stream';
 import { DocumentationRouter } from '../components/documentation/documentation.route';
 import { InfoRouter } from '../components/info/info.route';
+import { IUserController } from '../components/user/user.controller';
 import { UserRouter } from '../components/user/user.route';
 import { ApiError, ErrorResponse, isApiError } from '../helpers/error';
 import { startRedisConnection, stopRedisConnection } from './cache';
 import { connectToDatabase, disconnectFromDatabase } from './database';
 
-export class Server {
-  public application: express.Application;
-  public server: http.Server;
+export interface IServerDependencies {
+  userController: IUserController;
+}
 
-  constructor() {
+export class Server {
+  private application: express.Application;
+  private server: http.Server;
+  private dependencies: IServerDependencies;
+
+  constructor(dependencies: IServerDependencies) {
     this.application = express();
+    this.dependencies = dependencies;
     // Middlewares
     this.configureDefaultMiddlewares();
     // Routes
@@ -42,7 +49,7 @@ export class Server {
     });
   }
 
-  public async stop(): Promise<void> {
+  public async stop() {
     await disconnectFromDatabase();
     stopRedisConnection();
     return new Promise(resolve => {
@@ -60,8 +67,10 @@ export class Server {
     this.application.use(cors());
     // Json body parser
     this.application.use(bodyParser.json());
+    // TODO: Cloud service will handle this
     // Compress response
     this.application.use(compression());
+    // TODO: Replace with logging service
     // File logger
     const accessLogStream = rotatingFileStream('access.log', {
       interval: '1d',
@@ -85,7 +94,8 @@ export class Server {
     this.application.use('/', InfoRouter());
     // Swagger
     this.application.use('/api-docs', DocumentationRouter());
-    this.application.use('/users', UserRouter());
+
+    this.application.use('/users', UserRouter(this.dependencies.userController));
     // 404
     this.application.use((_req: express.Request, _res: express.Response, next: express.NextFunction) => {
       next(new ApiError(ErrorResponse.WrongEndpoint));
