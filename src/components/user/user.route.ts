@@ -35,7 +35,7 @@ function updateUserHandler(userController: IUserController): Handler {
     const { firstName, lastName, location } = req.body;
     const userId = req.params.id;
     const user: IUser = await userController.updateUser(userId, { firstName, lastName, location });
-    return res.status(httpStatus.CREATED).json(user);
+    return res.status(httpStatus.OK).json(user);
   };
 }
 
