@@ -1,3 +1,4 @@
+// TODO: Think about custom validation and removing celebrate
 import { celebrate, Joi } from 'celebrate';
 import joiObjectid from 'joi-objectid';
 // Extend joi with objectId

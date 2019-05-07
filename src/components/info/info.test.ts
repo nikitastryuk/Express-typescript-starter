@@ -3,13 +3,23 @@ dotenv.config();
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 
-import { startServer, stopServer } from '../../config/express.server';
+import { Server } from '../../config/server';
+import { UserController } from '../user/user.controller';
+import { UserRepository } from '../user/user.repo';
+
+// TODO: Mock User repo and controller
+const userRepository = new UserRepository();
+const userController = new UserController(userRepository);
+const server = new Server({ userController });
 
 const apiUrl = `http://localhost:${process.env.PORT}`;
 
 describe('Info', () => {
   beforeAll(async () => {
-    await startServer();
+    await server.start();
+  });
+  afterAll(async () => {
+    await server.stop();
   });
   describe('GET', () => {
     describe('/', () => {
@@ -19,8 +29,5 @@ describe('Info', () => {
         expect(Object.keys(response.body)).toEqual(expect.arrayContaining(['name', 'serverDateTime']));
       });
     });
-  });
-  afterAll(async () => {
-    await stopServer();
   });
 });

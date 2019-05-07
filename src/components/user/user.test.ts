@@ -3,13 +3,21 @@ dotenv.config();
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 
-import { startServer, stopServer } from '../../config/express.server';
+import { Server } from '../../config/server';
+import { UserController } from './user.controller';
 import { User } from './user.model';
+import { UserRepository } from './user.repo';
+
+const userRepository = new UserRepository();
+const userController = new UserController(userRepository);
+const server = new Server({ userController });
 
 const getRandomExistingUserId = async () => {
   const response = await supertest(apiUrl).get(`?offset=0&limit=${testUsers.length}`);
-  return response.body.users[0]._id;
+  return response.body.data[0]._id;
 };
+
+// TODO: Find other way working with db
 
 const apiUrl = `http://localhost:${process.env.PORT}/users`;
 const testUsers = [
@@ -41,11 +49,14 @@ const testUsers = [
 
 describe('Users', () => {
   beforeAll(async () => {
-    await startServer();
+    await server.start();
   });
   beforeEach(async () => {
     await User.deleteMany({});
     await User.create(testUsers);
+  });
+  afterAll(async () => {
+    await server.stop();
   });
   describe('GET', () => {
     describe('/users', () => {
@@ -56,20 +67,20 @@ describe('Users', () => {
       it(`?offset=0&limit=${testUsers.length} should return all users`, async () => {
         const response = await supertest(apiUrl).get('?offset=0&limit=3');
         expect(response.status).toBe(httpStatus.OK);
-        expect(response.body.users).toHaveLength(testUsers.length);
+        expect(response.body.data).toHaveLength(testUsers.length);
         expect(response.body.totalCount).toBe(testUsers.length);
       });
       it(`?offset=${testUsers.length - 1}&limit=${testUsers.length} should return last user`, async () => {
         const response = await supertest(apiUrl).get(`?offset=${testUsers.length - 1}&limit=${testUsers.length}`);
         expect(response.status).toBe(httpStatus.OK);
-        expect(response.body.users).toHaveLength(1);
+        expect(response.body.data).toHaveLength(1);
         expect(response.body.totalCount).toBe(testUsers.length);
-        expect(response.body.users[0].firstName).toBe(testUsers[testUsers.length - 1].firstName);
+        expect(response.body.data[0].firstName).toBe(testUsers[testUsers.length - 1].firstName);
       });
       it(`?offset=${testUsers.length}&limit=${testUsers.length} should return empty array`, async () => {
         const response = await supertest(apiUrl).get(`?offset=${testUsers.length}&limit=${testUsers.length}`);
         expect(response.status).toBe(httpStatus.OK);
-        expect(response.body.users).toHaveLength(0);
+        expect(response.body.data).toHaveLength(0);
         expect(response.body.totalCount).toBe(testUsers.length);
       });
       it('?sort=wrongField&offset=0&limit=3 should fail with invalid "sort" query value', async () => {
@@ -84,7 +95,7 @@ describe('Users', () => {
         const response = await supertest(apiUrl).get('?sort=location&lat=0&lng=0&offset=0&limit=3');
         expect(response.status).toBe(httpStatus.OK);
         // Every user should have distance field
-        response.body.users.map((user: any) =>
+        response.body.data.map((user: any) =>
           expect(user).toMatchObject({
             distance: expect.any(Number),
           }),
@@ -257,9 +268,5 @@ describe('Users', () => {
         expect(response.status).toBe(httpStatus.NOT_FOUND);
       });
     });
-  });
-
-  afterAll(async () => {
-    await stopServer();
   });
 });
